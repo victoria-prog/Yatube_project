@@ -1,0 +1,11 @@
+{% extends "posts/base.html" %}
+{% load thumbnail %}
+{% block title %}Избранные посты{% endblock %}
+<h4>{% block header %}Избранные посты</h4>{% endblock %}
+{% block content %}
+{% include 'includes/menu.html' with index=True %}
+{% for post in favor_posts %}
+{% include 'includes/card_post.html' with author=post.author %}
+{% endfor %}
+{% include 'includes/paginator.html' %}
+{% endblock %}

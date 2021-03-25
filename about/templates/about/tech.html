@@ -1,0 +1,51 @@
+{% extends "posts/base.html" %}
+{% block title %}Об используемых технологиях{% endblock %}
+{% block content %}
+{% load user_filters %}
+{% load static %}
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-3 mb-3 mt-1">
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="h5">
+                О Технологиях
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="h6 text-muted" align="justify">
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="card-body">
+        <div class="card-text">
+          <p>Я не буду перечислять все программные инструменты, которые были мне необходимы для создания бэкенда мини-сайта, но все же выделю один из них,
+            который необходим, но не очевиден был для меня на первый взгляд:
+            <li><img src="{% static 'html.png' %}" width="60px" height="60px" align="left" hspace="10" vspace="5" />
+              HTML, CSS - на мой взгляд, базовое понимание должно быть обязательно, пришлось потрудится и вникнуть в азы. Без знания на начальном уровне, сайт будет
+              мягко говоря, некрасивый. Думаю, javascript тоже пригодится.
+            </li>
+          </p>
+          <p>Среди инструментов, которыми мне приходилось пользоваться во время создания проекта есть те, которые я выделю
+            среди остальных.
+            <li><img src="{% static 'praktikum.png' %}" width="50px" height="50px" align="left" hspace="10" vspace="5" />Теория Практикума - сжатая, но при этом информативная, целостная. Спасибо команде за материал.</li><br>
+            <li><img src="{% static 'django.png' %}" width="60px" height="80px" align="left" hspace="10" vspace="10" />Второй, но точно не по значимости - официальная документация Django, где есть ответы на все вопросы, но иногда приходится помучаться.
+              потому что читать документацию в оригинале не то же самое, что читать ее на своем родном языке. Часто остаются вопросы. И здесь я перехожу к следующему пункту.</li><br>
+            <li><img src="{% static 'Stack-Overflow.png' %}" width="80px" height="70px" align="left" hspace="10" vspace="5" />Stack Overflow - мой незаменимый помощник в отладке проекта, почти на все вопросы я находила ответ на этом замечательном ресурсе.</li><br>
+            <br>
+            <p>В целом, для себя выделила одну сложность - огромный, иногда кажется, просто необъятный объем информации, которую получаешь ежедневно. Иногда кажется, что
+              голова взорвется. И ощущение, что времени постоянно не хватает. </p>
+            Спасибо всем кто прочитал:)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

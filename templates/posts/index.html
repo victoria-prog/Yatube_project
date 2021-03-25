@@ -1,0 +1,14 @@
+{% extends "posts/base.html" %}
+{% load thumbnail %}
+{% load cache %}
+{% block title %}Записи сообщества| Yatube{% endblock %}
+<h4>{% block header %}Последние обновления на сайте</h4>{% endblock %}
+{% block content %}
+{% include 'includes/menu.html' with index=True %}
+{% cache 20 index_page %}
+{% for post in page %}
+{% include 'includes/card_post.html' with author=post.author %}
+{% endfor %}
+{% endcache %}
+{% include 'includes/paginator.html' %}
+{% endblock %}

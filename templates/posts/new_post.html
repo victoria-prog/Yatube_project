@@ -1,0 +1,52 @@
+{% extends "posts/base.html" %}
+{% block title %}
+
+{% if post %}Редактирование записи{% else %}Новая запись{% endif %}{% endblock %}
+{% block header %}{% if post %}Редактирование записи{% else %}Новая запись{% endif %}{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8 p-5">
+    <div class="card">
+      <div class="card-body">
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+          {{ form.errors }}
+          {% endif %}
+          <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="{{ form.username.id_for_label }}" class="col-md-4 col-form-label text-md-right">Группа: </label>
+              <div class="col-md-6">
+                <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ form.group.help_text }}</small>
+                {{ form.group }}
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="{{ form.text.id_for_label }}" class="col-md-4 col-form-label text-md-right">Текст: </label>
+              <div class="col-md-6">
+                <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ form.text.help_text }}</small>
+                {{ form.text }}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ form.text.id_for_label }}" class="col-md-4 col-form-label text-md-right">Изображение: </label>
+              <div class="col-md-6">
+                <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ form.image.help_text }}</small>
+                {{ form.image}}
+              </div>
+            </div>
+            <div class="col-md-6 offset-md-4">
+              <button type="submit" class="btn btn-primary">
+                {% if post %}Редактировать запись{% else %}Создать новую запись {% endif %}
+              </button>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
