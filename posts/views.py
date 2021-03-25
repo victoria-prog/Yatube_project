@@ -120,8 +120,7 @@ def follow_index(request):
         'favor_posts': favor_posts,
         'paginator': paginator,
         'page': page
-        }
-    )
+    })
 
 
 @login_required

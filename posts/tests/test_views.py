@@ -178,7 +178,7 @@ class PostPagesTests(TestCase):
         Post.objects.create(
             text='Новый текст',
             author=PostPagesTests.user,
-            )
+        )
         second_response = self.guest_client.get(reverse('index'))
         self.assertEqual(response.content, second_response.content)
         cache.clear()
@@ -201,22 +201,18 @@ class PostPagesTests(TestCase):
             text='Текст от автора leo',
             group=PostPagesTests.group,
         )
-        self.authorized_client.get(reverse(
-                'profile_follow', kwargs={
-                    'username': author.username
-                    }
-        ))
+        self.authorized_client.get(reverse('profile_follow', kwargs={
+            'username': author.username
+        }))
         response = self.authorized_client.get(reverse('follow_index'))
         first_post = response.context['favor_posts'][0]
         self.assertEqual(first_post.text, favor_post.text)
         self.assertEqual(first_post.author, favor_post.author)
         self.assertEqual(first_post.group, favor_post.group)
         self.assertEqual(Follow.objects.count(), follow_count + 1)
-        self.authorized_client.get(reverse(
-                'profile_unfollow', kwargs={
-                    'username': author.username
-                    }
-        ))
+        self.authorized_client.get(reverse('profile_unfollow', kwargs={
+            'username': author.username
+        }))
         self.assertEqual(Follow.objects.count(), follow_count)
 
 
