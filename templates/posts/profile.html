@@ -4,16 +4,16 @@
 <main role="main" class="container">
   <div class="row">
     <div class="col-md-3 mb-3 mt-1">
-      {% include 'posts/includes/card_author_info.html' %}
+      {% include 'includes/card_author_info.html' %}
     </div>
     <div class="col-md-9">
       <div class="card-body">
         {% for post in page %}
-        {% include 'posts/includes/card_post.html' %}
+        {% include 'includes/card_post.html' %}
         {% endfor %}
       </div>
     </div>
   </div>
 </main>
-{% include "posts/includes/paginator.html" %}
+{% include "includes/paginator.html" %}
 {% endblock %}

@@ -4,11 +4,11 @@
 {% block title %}Записи сообщества| Yatube{% endblock %}
 <h4>{% block header %}Последние обновления на сайте</h4>{% endblock %}
 {% block content %}
-  {% include 'posts/includes/menu.html' with index=True %}
+  {% include 'includes/menu.html' with index=True %}
   {% cache 20 index_page %}
     {% for post in page %}
-      {% include 'posts/includes/card_post.html' with author=post.author %}
+      {% include 'includes/card_post.html' with author=post.author %}
     {% endfor %}
   {% endcache %}
-  {% include 'posts/includes/paginator.html' %}
+  {% include 'includes/paginator.html' %}
 {% endblock %}

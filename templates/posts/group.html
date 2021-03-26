@@ -5,7 +5,7 @@
   <h1 class="text-center">{{ group.title }}</h1>
   <p class="text-center">{{ group.description }}</p>
   {% for post in page %}
-    {% include 'posts/includes/card_post.html' with author=post.author %}
+    {% include 'includes/card_post.html' with author=post.author %}
   {% endfor %}
-  {% include "posts/includes/paginator.html" %}
+  {% include "includes/paginator.html" %}
 {% endblock %}

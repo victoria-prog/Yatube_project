@@ -2,7 +2,6 @@ import shutil
 from http import HTTPStatus
 
 from django import forms
-from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -57,7 +56,6 @@ class PostPagesTests(TestCase):
             group=cls.group,
             image=cls.uploaded
         )
-        
 
     @classmethod
     def tearDownClass(cls):
@@ -308,7 +306,6 @@ class PaginatorViewsTest(TestCase):
         """Шаблон 'index' c 10 постами на странице
         сформирован с правильным контекстом.
         """
-        comment = Comment
         response = self.guest_client.get(reverse('index'))
         all_object_at_first_page = response.context['page'].object_list
         for index, post in zip(range(12, 2, -1), all_object_at_first_page):
