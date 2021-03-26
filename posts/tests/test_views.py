@@ -1,12 +1,14 @@
 import shutil
+from http import HTTPStatus
 
 from django import forms
+from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
-from posts.models import Follow, Group, Post
+from posts.models import Comment, Follow, Group, Post
 
 User = get_user_model()
 
@@ -41,6 +43,12 @@ class PostPagesTests(TestCase):
             description='Группа любителей книг',
             slug='lev-tolstoy',
         )
+        cls.author = User.objects.create_user(username='lev')
+        cls.post_author = Post.objects.create(
+            author=cls.author,
+            text='Текст от автора leo',
+            group=PostPagesTests.group,
+        )
         cls.user = User.objects.create_user(username='clapathy')
         cls.username = cls.user.username
         cls.post = Post.objects.create(
@@ -49,6 +57,7 @@ class PostPagesTests(TestCase):
             group=cls.group,
             image=cls.uploaded
         )
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -187,33 +196,87 @@ class PostPagesTests(TestCase):
             second_response.content, response_after_clear_cache.content
         )
 
-    def test_authorized_user_can_folow_and_unfollow(self):
+    def test_authorized_user_can_folow(self):
         """Авторизованный пользователь может подписываться
-        на других пользователей и удалять их из подписок.
-        Новая запись пользователя появляется в ленте тех,
-        кто на него подписан и не появляется в ленте тех,
-        кто не подписан на него.
-        """
+        на других пользователей"""
         follow_count = Follow.objects.count()
-        author = User.objects.create_user(username='lev')
-        favor_post = Post.objects.create(
-            author=author,
-            text='Текст от автора leo',
-            group=PostPagesTests.group,
-        )
         self.authorized_client.get(reverse('profile_follow', kwargs={
-            'username': author.username
+            'username': PostPagesTests.author.username
         }))
-        response = self.authorized_client.get(reverse('follow_index'))
-        first_post = response.context['favor_posts'][0]
-        self.assertEqual(first_post.text, favor_post.text)
-        self.assertEqual(first_post.author, favor_post.author)
-        self.assertEqual(first_post.group, favor_post.group)
         self.assertEqual(Follow.objects.count(), follow_count + 1)
+
+    def test_authorized_user_can_unfolow(self):
+        """Авторизованный пользователь может отписываться
+        от других пользователей"""
+        follow_count = Follow.objects.count()
+        Follow.objects.create(
+            user=PostPagesTests.user,
+            author=PostPagesTests.author
+        )
         self.authorized_client.get(reverse('profile_unfollow', kwargs={
-            'username': author.username
+            'username': PostPagesTests.author.username
         }))
         self.assertEqual(Follow.objects.count(), follow_count)
+
+    def test_new_post_shown_for_follower(self):
+        """Новая запись пользователя появляется в ленте тех,
+        кто на него подписан."""
+        Follow.objects.create(
+            user=PostPagesTests.user,
+            author=PostPagesTests.author
+        )
+        response = self.authorized_client.get(reverse('follow_index'))
+        first_post = response.context['favor_posts'][0]
+        self.assertEqual(first_post.text, PostPagesTests.post_author.text)
+        self.assertEqual(first_post.author, PostPagesTests.post_author.author)
+        self.assertEqual(first_post.group, PostPagesTests.post_author.group)
+
+    def test_new_post_not_shown_for_follower(self):
+        """Новая запись пользователя не появляется в ленте тех,
+        кто на него не подписан."""
+        Post.objects.create(
+            author=PostPagesTests.author,
+            text='Новый пост',
+            group=PostPagesTests.group,
+        )
+        response = self.authorized_client.get(reverse('follow_index'))
+        count_favorite_post = response.context['favor_posts'].count()
+        self.assertEqual(count_favorite_post, 0)
+
+    def test_non_authorised_cannot_comment_post(self):
+        """Неавторизванный пользователь не может комментировать посты"""
+        kw = {
+           'username': PostPagesTests.username,
+           'post_id': PostPagesTests.post.id
+        }
+        response = self.guest_client.get(
+            f"{reverse('add_comment', kwargs=kw)}"
+        )
+        self.assertRedirects(
+            response,
+            f"{reverse('login')}?next={reverse('add_comment', kwargs=kw)}"
+        )
+
+    def test_authorised_can_comment_post(self):
+        """Авторизванный пользователь может комментировать посты"""
+        kw = {
+           'username': PostPagesTests.username,
+           'post_id': PostPagesTests.post.id
+        }
+        response = self.authorized_client.get(
+            f"{reverse('add_comment', kwargs=kw)}"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK.value)
+        comment_count = Comment.objects.count()
+        form_data = {
+            'text': 'Комментарий',
+        }
+        response = self.authorized_client.post(
+            reverse('add_comment', kwargs=kw),
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(comment_count + 1, Comment.objects.count())
 
 
 class PaginatorViewsTest(TestCase):
@@ -245,6 +308,7 @@ class PaginatorViewsTest(TestCase):
         """Шаблон 'index' c 10 постами на странице
         сформирован с правильным контекстом.
         """
+        comment = Comment
         response = self.guest_client.get(reverse('index'))
         all_object_at_first_page = response.context['page'].object_list
         for index, post in zip(range(12, 2, -1), all_object_at_first_page):

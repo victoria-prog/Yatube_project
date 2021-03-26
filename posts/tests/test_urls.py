@@ -1,5 +1,8 @@
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
+from django.urls import reverse
 from posts.models import Group, Post
 
 User = get_user_model()
@@ -32,7 +35,6 @@ class PostURLTests(TestCase):
             f'/{PostURLTests.username}/{PostURLTests.post.id}/edit/',
         )
         cls.usr_id_url = f'/{PostURLTests.username}/{PostURLTests.post.id}/'
-        cls.commt = f'/{PostURLTests.username}/{PostURLTests.post.id}/comment'
 
     def setUp(self):
         self.guest_client = Client()
@@ -44,37 +46,39 @@ class PostURLTests(TestCase):
     def test_urls_at_desired_location(self):
         """Страницы '/', '/group/<slug>/ , /<username>/,
         /<username>/<post_id>/ доступны любому пользователю.
-        Несуществующая страница возвращает код ошибки 404.
         """
         url_adresses = {
-            PostURLTests.indx_url: 200,
-            PostURLTests.group_url: 200,
-            PostURLTests.usr_url: 200,
-            PostURLTests.usr_id_url: 200,
-            '/wrong/': 404
+            PostURLTests.indx_url: HTTPStatus.OK.value,
+            PostURLTests.group_url: HTTPStatus.OK.value,
+            PostURLTests.usr_url: HTTPStatus.OK.value,
+            PostURLTests.usr_id_url: HTTPStatus.OK.value,
         }
         for adress, status_code in url_adresses.items():
             with self.subTest():
                 response = self.guest_client.get(adress)
                 self.assertEqual(response.status_code, status_code)
 
-    # Проверяем доступность страниц для авторизованного пользователя
     def test_urls_for_authorized_client_exists_at_desired_location(self):
         """Страницы '/', '/group/<slug>/, '/new/' доступны авторизованному
         пользователю. Страница /<username>/<post_id>/edit/ доступна автору
         поста"""
         url_adresses = {
-            PostURLTests.indx_url: 200,
-            PostURLTests.group_url: 200,
-            PostURLTests.new_url: 200,
-            PostURLTests.edit_url: 200
+            PostURLTests.indx_url: HTTPStatus.OK.value,
+            PostURLTests.group_url: HTTPStatus.OK.value,
+            PostURLTests.new_url: HTTPStatus.OK.value,
+            PostURLTests.edit_url: HTTPStatus.OK.value
         }
         for adress, status_code in url_adresses.items():
             with self.subTest():
                 response = self.authorized_client.get(adress)
                 self.assertEqual(response.status_code, status_code)
 
-    # Проверяем редиректы для неавторизованного пользователя и не автора поста
+    def test_url_does_not_exist_at_wrong_page(self):
+        """Страница с неверным адресом возвращает ошибку 404"""
+        wrong_adress = '/wrong/'
+        response = self.authorized_client.get(wrong_adress)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
     def test_url_new_redirect_anonymous_on_admin_login(self):
         """Страница по адресу '/new/' и '/<username>/<post_id>/comment'
         перенаправит анонимного пользователя на страницу логина.
@@ -88,17 +92,15 @@ class PostURLTests(TestCase):
         )
         redirect_anon = self.guest_client.get(PostURLTests.edit_url)
         redirect_non_author = self.authoriz_client2.get(PostURLTests.edit_url)
-        redirect_comment = self.guest_client.get(PostURLTests.commt)
         self.assertRedirects(
-            redirect_new, f'/auth/login/?next={PostURLTests.new_url}'
+            redirect_new, f"{reverse('login')}?next={reverse('new_post')}"
         )
+        kw_edit = {
+            'username': PostURLTests.username, 'post_id': PostURLTests.post.id
+        }
         self.assertRedirects(
             redirect_anon,
-            f'/auth/login/?next=/'
-            f'{PostURLTests.username}/{PostURLTests.post.id}/edit/'
-        )
-        self.assertRedirects(
-            redirect_comment, f'/auth/login/?next={PostURLTests.commt}'
+            f"{reverse('login')}?next={reverse('post_edit', kwargs=kw_edit)}"
         )
         self.assertRedirects(redirect_non_author, PostURLTests.usr_id_url)
 

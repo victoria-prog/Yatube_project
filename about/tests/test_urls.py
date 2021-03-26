@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.test import TestCase
 
 
@@ -7,8 +9,8 @@ class AboutURLTests(TestCase):
         """Страницы '/about/author/', '/about/tech/'
         доступны любому пользователю."""
         url_adresses = {
-            '/about/author/': 200,
-            '/about/tech/': 200
+            '/about/author/': HTTPStatus.OK.value,
+            '/about/tech/': HTTPStatus.OK.value
         }
         for adress, status_code in url_adresses.items():
             with self.subTest():

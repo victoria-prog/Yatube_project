@@ -1,5 +1,3 @@
-import textwrap
-
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -32,7 +30,7 @@ class Post(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return textwrap.shorten(self.text, (15))
+        return self.text[:15]
 
 
 class Comment(models.Model):
@@ -49,7 +47,7 @@ class Comment(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return textwrap.shorten(self.text, (15))
+        return self.text[:15]
 
 
 class Follow(models.Model):
@@ -61,4 +59,4 @@ class Follow(models.Model):
     )
 
     def __str__(self):
-        return (f'Подписчик: {self.user}, Избранный автор: {self.author}')
+        return f'Подписчик: {self.user}, Избранный автор: {self.author}'

@@ -46,14 +46,14 @@ class PostModelTest(TestCase):
                 self.assertEqual(
                     post._meta.get_field(value).help_text, expected)
 
-    def test_group_instance_is_title_field(self):
-        """В поле __str__  объекта group записано значение поля group.title."""
-        group = PostModelTest.group
-        expected_object_name = group.title
-        self.assertEqual(expected_object_name, str(group))
-
-    def test_post_instance_is_text_field(self):
-        """В поле __str__  объекта post записано значение поля post.text."""
-        post = PostModelTest.post
-        expected_object_name = textwrap.shorten(post.text, (15))
-        self.assertEqual(expected_object_name, str(post))
+    def test_group_and_post_instance_is_title_field(self):
+        """В поле __str__  объекта group записано значение поля group.title.
+        В поле __str__  объекта post записано значение поля post.text."""
+        group, post = PostModelTest.group, PostModelTest.post
+        title_view = {
+            PostModelTest.group: group.title,
+            PostModelTest.post: textwrap.shorten(post.text, (15))
+        }
+        for value, expected in title_view.items():
+            with self.subTest(value=value):
+                self.assertEqual(str(value), expected)
