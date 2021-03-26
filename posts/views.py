@@ -104,7 +104,7 @@ def add_comment(request, username, post_id):
         comment.save()
         return redirect(reverse('post', args=[username, post_id]))
     return render(
-        request, 'includes/comments.html', {'form': form, 'post': post}
+        request, 'posts/includes/comments.html', {'form': form, 'post': post}
     )
 
 

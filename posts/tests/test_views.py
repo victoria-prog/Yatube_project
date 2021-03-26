@@ -248,7 +248,7 @@ class PostPagesTests(TestCase):
             'post_id': PostPagesTests.post.id
         }
         response = self.guest_client.get(
-            {reverse('add_comment', kwargs=kw)}
+            reverse('add_comment', kwargs=kw)
         )
         self.assertRedirects(
             response,
@@ -262,7 +262,7 @@ class PostPagesTests(TestCase):
             'post_id': PostPagesTests.post.id
         }
         response = self.authorized_client.get(
-            f"{reverse('add_comment', kwargs=kw)}"
+            reverse('add_comment', kwargs=kw)
         )
         self.assertEqual(response.status_code, HTTPStatus.OK.value)
         comment_count = Comment.objects.count()
