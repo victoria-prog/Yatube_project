@@ -248,7 +248,7 @@ class PostPagesTests(TestCase):
             'post_id': PostPagesTests.post.id
         }
         response = self.guest_client.get(
-            f"{reverse('add_comment', kwargs=kw)}"
+            {reverse('add_comment', kwargs=kw)}
         )
         self.assertRedirects(
             response,
