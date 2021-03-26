@@ -244,8 +244,8 @@ class PostPagesTests(TestCase):
     def test_non_authorised_cannot_comment_post(self):
         """Неавторизванный пользователь не может комментировать посты"""
         kw = {
-           'username': PostPagesTests.username,
-           'post_id': PostPagesTests.post.id
+            'username': PostPagesTests.username,
+            'post_id': PostPagesTests.post.id
         }
         response = self.guest_client.get(
             f"{reverse('add_comment', kwargs=kw)}"
@@ -258,8 +258,8 @@ class PostPagesTests(TestCase):
     def test_authorised_can_comment_post(self):
         """Авторизванный пользователь может комментировать посты"""
         kw = {
-           'username': PostPagesTests.username,
-           'post_id': PostPagesTests.post.id
+            'username': PostPagesTests.username,
+            'post_id': PostPagesTests.post.id
         }
         response = self.authorized_client.get(
             f"{reverse('add_comment', kwargs=kw)}"
