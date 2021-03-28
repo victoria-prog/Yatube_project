@@ -1,5 +1,3 @@
-import textwrap
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from posts.models import Group, Post
@@ -52,7 +50,7 @@ class PostModelTest(TestCase):
         group, post = PostModelTest.group, PostModelTest.post
         title_view = {
             PostModelTest.group: group.title,
-            PostModelTest.post: textwrap.shorten(post.text, (15))
+            PostModelTest.post: post.text[:15]
         }
         for value, expected in title_view.items():
             with self.subTest(value=value):

@@ -16,7 +16,7 @@ def index(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'posts/index.html', {
-        'paginator': paginator, 'page': page,
+        'page': page,
         'post_list': post_list, 'is_index': is_index
     })
 
@@ -31,7 +31,7 @@ def group_posts(request, slug):
     return render(request, 'posts/group.html', {
         'group': group, 'page': page,
         'group_posts': group_posts,
-        'paginator': paginator, 'is_group': is_group
+        'is_group': is_group
     })
 
 
@@ -127,7 +127,10 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     if request.user != author:
-        Follow.objects.get_or_create(user=request.user, author=author)
+        if not Follow.objects.filter(
+            user=request.user, author=author
+        ).exists():
+            Follow.objects.create(user=request.user, author=author)
     return redirect(reverse('profile', args=[username]))
 
 

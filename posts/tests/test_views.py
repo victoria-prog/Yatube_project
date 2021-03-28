@@ -1,5 +1,4 @@
 import shutil
-from http import HTTPStatus
 
 from django import forms
 from django.contrib.auth import get_user_model
@@ -203,7 +202,7 @@ class PostPagesTests(TestCase):
         }))
         self.assertEqual(Follow.objects.count(), follow_count + 1)
 
-    def test_authorized_user_can_unfolow(self):
+    def test_authorized_user_can_unfollow(self):
         """Авторизованный пользователь может отписываться
         от других пользователей"""
         follow_count = Follow.objects.count()
@@ -250,9 +249,11 @@ class PostPagesTests(TestCase):
         response = self.guest_client.get(
             reverse('add_comment', kwargs=kw)
         )
+        reversed_login = reverse('login')
+        reversed_comment = reverse('add_comment', kwargs=kw)
         self.assertRedirects(
             response,
-            f"{reverse('login')}?next={reverse('add_comment', kwargs=kw)}"
+            f'{reversed_login}?next={reversed_comment}'
         )
 
     def test_authorised_can_comment_post(self):
@@ -261,15 +262,11 @@ class PostPagesTests(TestCase):
             'username': PostPagesTests.username,
             'post_id': PostPagesTests.post.id
         }
-        response = self.authorized_client.get(
-            reverse('add_comment', kwargs=kw)
-        )
-        self.assertEqual(response.status_code, HTTPStatus.OK.value)
         comment_count = Comment.objects.count()
         form_data = {
             'text': 'Комментарий',
         }
-        response = self.authorized_client.post(
+        self.authorized_client.post(
             reverse('add_comment', kwargs=kw),
             data=form_data,
             follow=True

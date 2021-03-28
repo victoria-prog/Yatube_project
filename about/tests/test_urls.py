@@ -8,11 +8,11 @@ class AboutURLTests(TestCase):
     def test_urls_exists_at_desired_location(self):
         """Страницы '/about/author/', '/about/tech/'
         доступны любому пользователю."""
-        url_adresses = {
-            '/about/author/': HTTPStatus.OK.value,
-            '/about/tech/': HTTPStatus.OK.value
-        }
-        for adress, status_code in url_adresses.items():
+        url_adresses = [
+            '/about/author/',
+            '/about/tech/'
+        ]
+        for adress in url_adresses:
             with self.subTest():
                 response = self.client.get(adress)
-                self.assertEqual(response.status_code, status_code)
+                self.assertEqual(response.status_code, HTTPStatus.OK)

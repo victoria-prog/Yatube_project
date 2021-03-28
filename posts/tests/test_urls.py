@@ -47,31 +47,31 @@ class PostURLTests(TestCase):
         """Страницы '/', '/group/<slug>/ , /<username>/,
         /<username>/<post_id>/ доступны любому пользователю.
         """
-        url_adresses = {
-            PostURLTests.indx_url: HTTPStatus.OK.value,
-            PostURLTests.group_url: HTTPStatus.OK.value,
-            PostURLTests.usr_url: HTTPStatus.OK.value,
-            PostURLTests.usr_id_url: HTTPStatus.OK.value,
-        }
-        for adress, status_code in url_adresses.items():
+        url_adresses = [
+            PostURLTests.indx_url,
+            PostURLTests.group_url,
+            PostURLTests.usr_url,
+            PostURLTests.usr_id_url,
+        ]
+        for adress in url_adresses:
             with self.subTest():
                 response = self.guest_client.get(adress)
-                self.assertEqual(response.status_code, status_code)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_urls_for_authorized_client_exists_at_desired_location(self):
         """Страницы '/', '/group/<slug>/, '/new/' доступны авторизованному
         пользователю. Страница /<username>/<post_id>/edit/ доступна автору
         поста"""
-        url_adresses = {
-            PostURLTests.indx_url: HTTPStatus.OK.value,
-            PostURLTests.group_url: HTTPStatus.OK.value,
-            PostURLTests.new_url: HTTPStatus.OK.value,
-            PostURLTests.edit_url: HTTPStatus.OK.value
-        }
-        for adress, status_code in url_adresses.items():
+        url_adresses = [
+            PostURLTests.indx_url,
+            PostURLTests.group_url,
+            PostURLTests.new_url,
+            PostURLTests.edit_url
+        ]
+        for adress in url_adresses:
             with self.subTest():
                 response = self.authorized_client.get(adress)
-                self.assertEqual(response.status_code, status_code)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_url_does_not_exist_at_wrong_page(self):
         """Страница с неверным адресом возвращает ошибку 404"""
@@ -92,15 +92,19 @@ class PostURLTests(TestCase):
         )
         redirect_anon = self.guest_client.get(PostURLTests.edit_url)
         redirect_non_author = self.authoriz_client2.get(PostURLTests.edit_url)
+        reversed_login = reverse('login')
+        reversed_post = reverse('new_post')
         self.assertRedirects(
-            redirect_new, f"{reverse('login')}?next={reverse('new_post')}"
+            redirect_new, f'{reversed_login}?next={reversed_post}'
         )
         kw_edit = {
             'username': PostURLTests.username, 'post_id': PostURLTests.post.id
         }
+        reversed_login = reverse('login')
+        reversed_edit = reverse('post_edit', kwargs=kw_edit)
         self.assertRedirects(
             redirect_anon,
-            f"{reverse('login')}?next={reverse('post_edit', kwargs=kw_edit)}"
+            f'{reversed_login}?next={reversed_edit}'
         )
         self.assertRedirects(redirect_non_author, PostURLTests.usr_id_url)
 
