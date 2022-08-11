@@ -25,7 +25,10 @@ SECRET_KEY = 'qs*4bt1y9m!o^dh$!$wuxx^w%!4i!2f)@s+=v3(*obks4$n$bi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+ALLOWED_HOSTS = [
+    'localhost', '127.0.0.1', '[::1]', 'testserver',
+    'www.kolomietsvv.pythonanywhere.com', 'kolomietsvv.pythonanywhere.com'
+]
 
 
 # Application definition
@@ -108,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = 'UTC'
 
@@ -120,7 +123,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

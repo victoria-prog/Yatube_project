@@ -10,13 +10,13 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="h6 text-muted">
-        Подписчиков: {{ author.following.count }} <br />
-        Подписан: {{ author.follower.count }}
+        Followers: {{ author.following.count }} <br />
+        Following: {{ author.follower.count }}
       </div>
     </li>
     <li class="list-group-item">
       <div class="h6 text-muted">
-        Записей: {{ author.posts.count }}
+        Posts: {{ author.posts.count }}
       </div>
     </li>
   </ul>
@@ -24,9 +24,9 @@
 <div class="container"><br>
   {% if request.user != author %}
     {% if following %}
-      <a class="btn btn-lg btn-light" href="{% url 'profile_unfollow' author.username %}" role="button">Отписаться</a>
+      <a class="btn btn-lg btn-light" href="{% url 'profile_unfollow' author.username %}" role="button">Unfollow</a>
     {% else %}
-      <a class="btn btn-lg btn-primary" href="{% url 'profile_follow' author.username %}" role="button">Подписаться</a>
+      <a class="btn btn-lg btn-primary" href="{% url 'profile_follow' author.username %}" role="button">Follow</a>
     {% endif %}
   {% endif %}
 </div>

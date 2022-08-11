@@ -1,17 +1,17 @@
 {% extends "posts/base.html" %}
-{% block title %}Зарегистрироваться{% endblock %}
+{% block title %}Sign up{% endblock %}
 {% block content %}
 {% load user_filters %}
 
 <div class="row justify-content-center">
   <div class="col-md-8 p-5">
     <div class="card">
-      <div class="card-header">Зарегистрироваться</div>
+      <div class="card-header">Sign up</div>
       <div class="card-body">
 
         {% for error in form.errors %}
         <div class="alert alert-danger" role="alert">
-          {{ error }}
+          Check the validity of your input data
         </div>
         {% endfor %}
         <form method="post" action="{% url 'signup' %}">
@@ -29,7 +29,7 @@
           {% endfor %}
           <div class="col-md-6 offset-md-4">
             <button type="submit" class="btn btn-primary">
-              Зарегистрироваться
+             Sign up
             </button>
           </div>
         </form>

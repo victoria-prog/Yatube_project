@@ -1,7 +1,7 @@
 {% extends "posts/base.html" %}
 {% load thumbnail %}
-{% block title %}Избранные посты{% endblock %}
-<h4>{% block header %}Избранные посты</h4>{% endblock %}
+{% block title %}Favourite posts{% endblock %}
+<h4>{% block header %}Favourite posts</h4>{% endblock %}
 {% block content %}
   {% include 'includes/menu.html' with index=True %}
   {% for post in favor_posts %}
