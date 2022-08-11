@@ -26,9 +26,7 @@ SECRET_KEY = 'qs*4bt1y9m!o^dh$!$wuxx^w%!4i!2f)@s+=v3(*obks4$n$bi'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost', '127.0.0.1', '[::1]', 'testserver',
-    'www.kolomietsvv.pythonanywhere.com', 'kolomietsvv.pythonanywhere.com'
-]
+    'localhost', '127.0.0.1', '[::1]', 'testserver']
 
 
 # Application definition
@@ -123,7 +121,8 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
