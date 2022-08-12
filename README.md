@@ -15,8 +15,7 @@ SQLite3
 sorl-thumbnail==12.8.0
 ```
 ### Deployment status:
-
-[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
+![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)
 
 ### IP-adress 
 
