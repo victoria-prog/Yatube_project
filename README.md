@@ -9,8 +9,15 @@ https://github.com/victoria-prog
 
 ### Technologies
 ```
-Python==3.7
-Django==3.0.5
+Python==3.8
+Django==3.2.3
 SQLite3
 sorl-thumbnail==12.8.0
 ```
+### Deployment status:
+
+[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
+
+### IP-adress 
+
+yatube-project.herokuapp.com
