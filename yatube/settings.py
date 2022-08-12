@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+import django_heroku
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,10 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'qs*4bt1y9m!o^dh$!$wuxx^w%!4i!2f)@s+=v3(*obks4$n$bi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost', '127.0.0.1', '[::1]', 'testserver']
+    'localhost', '127.0.0.1', '[::1]', 'testserver', 'yatube-project.herokuapp.com']
 
 
 # Application definition
@@ -42,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sorl.thumbnail',
+    'storages'
+    
 ]
 
 MIDDLEWARE = [
@@ -52,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'yatube.urls'
@@ -119,14 +126,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
@@ -139,3 +138,38 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+django_heroku.settings(locals())
+
+if not DEBUG:
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = 'yatube-bucket'
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_PRELOAD_METADATA = True
+    AWS_DEFAULT_ACL = 'public-read' 
+    AWS_STATIC_LOCATION = 'static'
+    AWS_MEDIA_LOCATION = 'media'
+
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL =  'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+    
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_MEDIA_LOCATION)
+
+    STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    )
+
+else:
+    STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    )
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+    MEDIA_URL = '/imgs/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+

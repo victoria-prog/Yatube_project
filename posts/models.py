@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from storages.backends.s3boto3 import S3Boto3Storage
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class Post(models.Model):
         related_name='posts', verbose_name='Group',
         help_text='Choose a group'
     )
-    image = models.ImageField(upload_to='posts/', blank=True, null=True)
+    image = models.ImageField(storage=S3Boto3Storage(location='media'), blank=True, null=True)
 
     class Meta:
         ordering = ('-pub_date',)

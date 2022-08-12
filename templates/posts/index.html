@@ -2,7 +2,7 @@
 {% load thumbnail %}
 {% load cache %}
 {% block title %}Posts of the group| Yatube{% endblock %}
-<h4>{% block header %}Recent updates on the site</h4>{% endblock %}
+<h4>{% block header %}</h4>{% endblock %}
 {% block content %}
   {% include 'includes/menu.html' with index=True %}
   {% cache 20 index_page %}
