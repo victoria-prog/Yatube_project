@@ -19,4 +19,4 @@ sorl-thumbnail==12.8.0
 
 ### IP-adress 
 
-![yatube-project.herokuapp.com](https://yatube-project.herokuapp.com/)
+[yatube-project](https://yatube-project.herokuapp.com/)
