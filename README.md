@@ -1,11 +1,9 @@
-# Yatube
+# Yatube-project
 
 ### Description
-"Yatube" a social network for personal blogging.
-###
+"Yatube-project" a social network for personal blogging.
 ### About the author
-Viktoria Kolomiets 
-https://github.com/victoria-prog
+[Viktoria Kolomiets](https://github.com/victoria-prog)
 
 ### Technologies
 ```
@@ -17,6 +15,6 @@ sorl-thumbnail==12.8.0
 ### Deployment status:
 ![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)
 
-### IP-adress 
 
-[yatube-project](https://yatube-project.herokuapp.com/)
+###
+Click [here](https://yatube-project.herokuapp.com/) to go to my social blog!
